@@ -22,10 +22,11 @@ cd SyncFolder
 ## Usage
 
 python main.py --source_dir /path/to/source --replica_dir /path/to/replica --interval <60> --log_path /path/to/sync.log
---source_dir: The path to the source directory.
---replica_dir: The path to the replica directory.
---interval: Synchronization interval in seconds.
---log_path: Path to the log file where operations will be logged.
+
+- --source_dir: The path to the source directory.
+- --replica_dir: The path to the replica directory.
+- --interval: Synchronization interval in seconds.
+- --log_path: Path to the log file where operations will be logged.
 
 SyncFolder includes `test_source_dir` and `test_replica_dir` directories within the repository for testing purposes. These directories are designed to help you verify the synchronization functionality, including handling of regular files, symbolic links, and preservation of file permissions.
 
