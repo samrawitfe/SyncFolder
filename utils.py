@@ -4,9 +4,9 @@ import sys
 
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(description='Synchronize a source folder with a replica folder.')
+    parser = argparse.ArgumentParser(description='Synchronize a source folder with a test_replica_dir folder.')
     parser.add_argument('--source_dir', required=True, help='Path to the source directory')
-    parser.add_argument('--replica_dir', required=True, help='Path to the replica directory')
+    parser.add_argument('--replica_dir', required=True, help='Path to the test_replica_dir directory')
     parser.add_argument('--interval', type=int, required=True, help='Synchronization interval in seconds')
     parser.add_argument('--log_path', required=True, help='Path to the log file')
     return parser.parse_args()
