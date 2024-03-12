@@ -1,5 +1,6 @@
 import logging
 
+from sync_folder import start_sync
 from utils import parse_arguments, setup_logging
 
 
@@ -9,6 +10,8 @@ def main():
 
     logging.info("Starting SyncFolder with source: %s, replica: %s, interval: %s seconds",
                  args.source_dir, args.replica_dir, args.interval)
+
+    start_sync(args.source_dir, args.replica_dir, args.interval)
 
 
 if __name__ == '__main__':
