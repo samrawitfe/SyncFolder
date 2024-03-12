@@ -35,29 +35,37 @@ def sync_directories(source_dir, replica_dir):
         source_path = source_dir / filename
         replica_path = replica_dir / filename
 
-        if source_path.is_symlink():
-            replicate_symlink(source_path, replica_path)
-        elif source_path.is_dir():
-            if not replica_path.exists():
-                os.makedirs(replica_path)
-            shutil.copystat(source_path, replica_path)
-            logging.info(f"Created directory {replica_path} with preserved permissions")
-
-        else:
-            shutil.copy2(source_path, replica_path)
-            logging.info(f"Copied file {source_path} to {replica_path} with preserved permissions")
+        try:
+            if source_path.is_symlink():
+                replicate_symlink(source_path, replica_path)
+            elif source_path.is_dir():
+                if not replica_path.exists():
+                    os.makedirs(replica_path)
+                shutil.copystat(source_path, replica_path)
+                logging.info(f"Created directory {replica_path} with preserved permissions")
+            else:
+                shutil.copy2(source_path, replica_path)
+                logging.info(f"Copied file {source_path} to {replica_path} with preserved permissions")
+        except Exception as e:
+            logging.error(f"Error processing {source_path}: {e}")
 
     for filename in dir_cmp.right_only:
         replica_path = replica_dir / filename
-        if replica_path.is_dir():
-            shutil.rmtree(replica_path)
-            logging.info(f"Removed directory {replica_path}")
-        else:
-            replica_path.unlink()
-            logging.info(f"Removed file {replica_path}")
+        try:
+            if replica_path.is_dir():
+                shutil.rmtree(replica_path)
+                logging.info(f"Removed directory {replica_path}")
+            else:
+                replica_path.unlink()
+                logging.info(f"Removed file {replica_path}")
+        except Exception as e:
+            logging.error(f"Error removing {replica_path}: {e}")
 
     for sub_dir in dir_cmp.common_dirs:
-        sync_directories(source_dir / sub_dir, replica_dir / sub_dir)
+        try:
+            sync_directories(source_dir / sub_dir, replica_dir / sub_dir)
+        except Exception as e:
+            logging.error(f"Error syncing subdirectories {source_dir / sub_dir} and {replica_dir / sub_dir}: {e}")
 
 
 def start_sync(source_dir, replica_dir, interval):
@@ -69,6 +77,6 @@ def start_sync(source_dir, replica_dir, interval):
     while True:
         logging.info("Starting synchronization...")
         sync_directories(source_dir, replica_dir)
-        logging.info(f"Synchronization complete. Waiting for next {interval} seconds.")
+        logging.info(f"Synchronization complete. Waiting for next {interval} seconds...")
         time.sleep(interval)
 
